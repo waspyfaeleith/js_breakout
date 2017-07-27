@@ -7,7 +7,7 @@ var dy = -2;
 var ballRadius = 10;
 
 var paddleHeight = 10;
-var paddleWidth = 75;
+var paddleWidth = 80;
 var paddleX = (canvas.width - paddleWidth) / 2;
 
 var rightPressed = false;
@@ -74,7 +74,6 @@ function drawBricks() {
 
         ctx.beginPath();
         ctx.rect(brickX, brickY, brickWidth, brickHeight);
-        //ctx.fillStyle = '#0095DD';
         ctx.fillStyle = brickColour;
         ctx.fill();
         ctx.closePath();
@@ -179,6 +178,18 @@ function draw() {
     dy = -dy;
   } else if (y + dy > canvas.height - ballRadius) {
     if (x > paddleX && x < paddleX + paddleWidth) {
+      //ball hits paddle
+      var paddleCentre = paddleX + (paddleWidth / 2);
+      if (x == paddleCentre) {
+        //alert('Hit centre of paddle: ' + dx);
+        dx = 0;
+      } else if (x > paddleCentre) {
+        //alert('Hit right of ' + paddleCentre + ' : '+ dx);
+        dx = 2;
+      } else if (x < paddleCentre) {
+        //alert('Hit left of ' + paddleCentre + ' : '+ dx);
+        dx = -2;
+      }
       dy = -dy;
     }
     else {
