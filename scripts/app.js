@@ -105,15 +105,13 @@ function collisionDetection() {
 }
 
 function drawScore() {
-  //ctx.font = '16px Arial';
-  ctx.font = '16px ZX-Spectrum'
+  ctx.font = '16px ZX-Spectrum';
   ctx.fillStyle = '#0200cc';
   ctx.fillText('Score: ' + score, 8, 20);
 }
 
 function drawLives() {
-  //ctx.font = '16px Arial';
-  ctx.font = '16px ZX-Spectrum'
+  ctx.font = '16px ZX-Spectrum';
   ctx.fillStyle = '#0200cc';
   ctx.fillText('Lives: ' + lives, canvas.width - 140, 20);
 }
@@ -121,7 +119,6 @@ function drawLives() {
 function drawPaddle() {
   ctx.beginPath();
   ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
-  //ctx.fillStyle = '#0095DD';
   ctx.fillStyle = '#0200cc';
   ctx.fill();
   ctx.closePath();
