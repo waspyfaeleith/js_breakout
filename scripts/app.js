@@ -4,7 +4,7 @@ var x = canvas.width / 2;
 var y = canvas.height - 30;
 var dx = -2;
 var dy = -2;
-var ballRadius = 10;
+var ballRadius = 5;
 
 var paddleHeight = 10;
 var paddleWidth = 80;
@@ -23,7 +23,7 @@ var brickOffsetLeft = 15;
 var brickColour;
 var brickScore;
 
-var highScore = 0;
+var highScore;
 var score = 0;
 var numBricksHit = 0;
 var lives = 3;
