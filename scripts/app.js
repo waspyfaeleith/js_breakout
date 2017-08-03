@@ -5,6 +5,7 @@ var y = canvas.height - 30;
 var dx = -2;
 var dy = -2;
 var ballRadius = 5;
+var ballSpeed = 2;
 
 var paddleHeight = 10;
 var paddleWidth = 80;
@@ -101,6 +102,7 @@ function collisionDetection() {
             setUpBricks();
             numBricksHit = 0;
             y = canvas.height - 30;
+            ballSpeed++;
           }
         }
       }
@@ -212,10 +214,10 @@ function draw() {
       if (x == paddleCentre) {
         dx = 0;
       } else if (x > paddleCentre) {
-        dx = 2;
+        dx = ballSpeed;
       } else if (x < paddleCentre) {
 
-        dx = -2;
+        dx = -ballSpeed;
       }
       dy = -dy;
     }
@@ -228,7 +230,7 @@ function draw() {
       else {
           x = canvas.width / 2;
           y = canvas.height - 30;
-          dx = 2;
+          dx = ballSpeed;
           dy = -2;
           paddleX = (canvas.width - paddleWidth) / 2;
       }
