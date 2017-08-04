@@ -1,18 +1,20 @@
 var canvas = document.getElementById('myCanvas');
 var ctx = canvas.getContext('2d');
-var x = canvas.width / 2;
-var y = canvas.height - 30;
-var dx = -2;
-var dy = -2;
-var ballRadius = 5;
-var ballSpeed = 2;
 
 var paddleHeight = 10;
 var paddleWidth = 80;
 var paddleX = (canvas.width - paddleWidth) / 2;
 
+var x = canvas.width / 2;
+var y = canvas.height - (paddleHeight + 2);
+var dx = 0;
+var dy = -2;
+var ballRadius = 5;
+var ballSpeed = 2;
+
 var rightPressed = false;
 var leftPressed = false;
+var firePressed = false;
 
 var brickRowCount = 5;
 var brickColumnCount = 11;
@@ -30,6 +32,7 @@ var numBricksHit = 0;
 var lives = 3;
 
 var bricks = [];
+var ballStatus = 0;
 
 function setUpBricks() {
   for (column = 0; column < brickColumnCount; column++) {
@@ -91,10 +94,10 @@ function collisionDetection() {
   for (column = 0; column < brickColumnCount; column++) {
     for (row = 0; row < brickRowCount; row++) {
       var brick = bricks[column][row];
-      if (brick.status == 1) {
+      if (brick.status == 1 && ballStatus == 1) {
         if (x > brick.x && x < brick.x + brickWidth &&
             y > brick.y && y < brick.y + brickHeight) {
-          dy = -dy;
+          ballStatus = 0;
           brick.status = 0;
           score += brick.score;
           numBricksHit++;
@@ -112,7 +115,7 @@ function collisionDetection() {
 }
 
 function updateHighScore() {
-  var jsonString = localStorage.getItem('breakoutHighScore');
+  var jsonString = localStorage.getItem('invadersHighScore');
   if (jsonString === null) {
     highScore = 0;
   } else {
@@ -122,7 +125,7 @@ function updateHighScore() {
   if (score > highScore) {
     highScore = score;
     var jsonString = JSON.stringify(highScore);
-    localStorage.setItem('breakoutHighScore', jsonString);
+    localStorage.setItem('invadersHighScore', jsonString);
   }
 }
 
@@ -163,6 +166,13 @@ function keyDownHandler(e) {
   else if (e.keyCode == 37) {
     leftPressed = true;
   }
+  else if (e.keyCode == 32) {
+    firePressed = true;
+    console.log("Fire button pressed");
+    if (ballStatus !== 1) {
+      fire();
+    }
+  }
 }
 
 function keyUpHandler(e) {
@@ -171,6 +181,9 @@ function keyUpHandler(e) {
   }
   else if (e.keyCode == 37) {
     leftPressed = false;
+  }
+  else if (e.keyCode == 32){
+    firePressed = false;
   }
 }
 
@@ -181,12 +194,26 @@ function mouseMoveHandler(e) {
   }
 }
 
+function fire() {
+  ballStatus = 1;
+  x = paddleX + (paddleWidth / 2);
+  y = canvas.height - (paddleHeight + 2);
+}
+
 function drawBall() {
-  ctx.beginPath();
-  ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
-  ctx.fillStyle = '#0200cc';
-  ctx.fill();
-  ctx.closePath();
+  if (ballStatus === 1) {
+    ctx.beginPath();
+    ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
+    ctx.fillStyle = '#0200cc';
+    ctx.fill();
+    ctx.closePath();
+  }
+}
+
+function eraseBall() {
+  ballStatus = 0;
+  x = paddleX + (paddleWidth / 2); ;
+  y = canvas.height - (paddleHeight + 2);
 }
 
 function draw() {
@@ -202,40 +229,8 @@ function draw() {
 
   collisionDetection();
 
-  if (x + dx > canvas.width || x + dx < 0) {
-    dx = -dx;
-  }
-
-  if (y + dy < ballRadius) {
-    dy = -dy;
-  } else if (y + dy > canvas.height - ballRadius) {
-    if (x > paddleX && x < paddleX + paddleWidth) {
-      //ball hits paddle - check if it hits left, right, or centre
-      var paddleCentre = paddleX + (paddleWidth / 2);
-      if (x == paddleCentre) {
-        dx = 0;
-      } else if (x > paddleCentre) {
-        dx = ballSpeed;
-      } else if (x < paddleCentre) {
-
-        dx = -ballSpeed;
-      }
-      dy = -dy;
-    }
-    else {
-      lives--;
-      if (!lives) {
-          alert('GAME OVER!\n You scored ' + score + ' points');
-          document.location.reload();
-      }
-      else {
-          x = canvas.width / 2;
-          y = canvas.height - 30;
-          dx = ballSpeed;
-          dy = -2;
-          paddleX = (canvas.width - paddleWidth) / 2;
-      }
-    }
+  if (y == 0) {
+    eraseBall();
   }
 
   if (rightPressed && paddleX < canvas.width - paddleWidth) {
@@ -244,6 +239,8 @@ function draw() {
   else if (leftPressed && paddleX > 0) {
     paddleX -= 7;
   }
+
+
   x += dx;
   y += dy;
 
