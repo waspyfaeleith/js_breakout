@@ -101,7 +101,8 @@ function collisionDetection() {
           if (numBricksHit == brickRowCount * brickColumnCount) {
             setUpBricks();
             numBricksHit = 0;
-            y = canvas.height - 30;
+            y = canvas.height - paddleHeight;
+            x = paddleX + (paddleWidth / 2);
             ballSpeed++;
           }
         }
@@ -113,14 +114,14 @@ function collisionDetection() {
 function updateHighScore() {
   var jsonString = localStorage.getItem('breakoutHighScore');
   if (jsonString === null) {
-    highScore = 0; 
+    highScore = 0;
   } else {
     highScore = JSON.parse(jsonString);
   }
 
   if (score > highScore) {
     highScore = score;
-    var jsonString = JSON.stringify(highScore) 
+    var jsonString = JSON.stringify(highScore);
     localStorage.setItem('breakoutHighScore', jsonString);
   }
 }
@@ -224,7 +225,7 @@ function draw() {
     else {
       lives--;
       if (!lives) {
-          alert('GAME OVER!\n You scored ' + score + ' points' );
+          alert('GAME OVER!\n You scored ' + score + ' points');
           document.location.reload();
       }
       else {
